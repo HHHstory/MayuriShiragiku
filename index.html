@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>茉百合 - Character Fan Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --theme-color: #776d82; 
+            --secondary-color: #d4e5f8;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--theme-color);
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        /* 首页全屏剧照样式 */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: transform 10s ease-out;
+        }
+        .hero-section:hover .hero-image {
+            transform: scale(1.1);
+        }
+        .hero-content {
+            position: absolute;
+            z-index: 10;
+            text-align: center;
+            color: white;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .hero-bg-text {
+            position: absolute;
+            font-size: 15rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+            white-space: nowrap;
+            user-select: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* 向下滚动提示 */
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 20;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+        /* 悬浮播放器样式 */
+        .music-player-fixed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--secondary-color);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 300px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .music-player-fixed.collapsed {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .player-toggle {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--theme-color);
+            transition: transform 0.3s;
+        }
+        .collapsed .player-toggle {
+            transform: rotate(0deg);
+        }
+        .music-player-fixed:not(.collapsed) .player-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 40px;
+            width: 40px;
+            transform: rotate(180deg);
+        }
+        .player-content {
+            padding: 20px;
+            display: block;
+        }
+        .collapsed .player-content {
+            display: none;
+        }
+        .playlist-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .playlist-item {
+            padding: 8px 12px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            color: #666;
+        }
+        .playlist-item:hover {
+            background: var(--secondary-color);
+            color: var(--theme-color);
+        }
+        .playlist-item.active {
+            background: var(--theme-color);
+            color: white;
+        }
+        /* 自定义滚动条 */
+        .playlist-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .playlist-container::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+        /* 组合器样式 */
+        .composite-preview {
+            background-image: 
+                linear-gradient(45deg, #eee 25%, transparent 25%), 
+                linear-gradient(-45deg, #eee 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #eee 75%), 
+                linear-gradient(-45deg, transparent 75%, #eee 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        /* 自定义滚动条样式 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d4e5f8;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #776d82;
+        }
+        .selector-grid::-webkit-scrollbar {
+            height: 6px;
+        }
+        .selector-grid::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 悬浮播放器 -->
+    <div id="fixed-player" class="music-player-fixed collapsed">
+        <div class="player-toggle" onclick="togglePlayer()">
+            <svg id="toggle-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+            </svg>
+        </div>
+        <div class="player-content">
+            <div class="mb-4">
+                <p class="text-xs text-[#776d82] font-bold uppercase tracking-wider mb-1">Now Playing</p>
+                <p id="current-track-name" class="text-sm font-medium text-gray-800 truncate">white-clover</p>
+            </div>
+            
+            <audio id="main-audio" controls class="w-full h-8 mb-4">
+                <source id="audio-source" src="资源/BGM/05 white-clover.mp3" type="audio/mpeg">
+            </audio>
+
+            <div class="playlist-container" id="playlist">
+                <!-- 列表由 JS 生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full bg-white/10 backdrop-blur-md shadow-sm z-50 transition-all duration-300 hover:bg-white/90">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-white mix-blend-difference">MAYURI</div>
+            <div class="space-x-8">
+                <a href="#home" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">首页</a>
+                <a href="#profile" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">角色档案</a>
+                <a href="#visuals" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">CG展示</a>
+                <a href="#composite" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">场景立绘</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页全屏视觉区 -->
+    <section id="home" class="hero-section">
+        <img src="资源/剧照/MEV001A.png" alt="白鹭茉百合 剧照" class="hero-image">
+        <div class="hero-bg-text">MAYURI</div>
+        <div class="hero-content px-6">
+            <h2 class="text-[#d4e5f8] text-2xl font-semibold mb-4 italic tracking-widest">Mayuri Shiragiku</h2>
+            <h1 class="text-6xl md:text-8xl font-bold mb-8 tracking-tighter">白鹭 茉百合</h1>
+            <p class="text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-light opacity-90 leading-relaxed">
+                「 呐、茉百合。 你真的是、为了被爱而生下来的呀 」
+            </p>
+        </div>
+        <!-- 向下箭头 -->
+        <a href="#profile" class="scroll-down">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </a>
+    </section>
+
+    <!-- 角色档案区 -->
+    <section id="profile" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-gray-800 mb-12 text-center">角色档案 / Profile</h2>
+            <div class="flex flex-col md:flex-row gap-12 items-start max-w-6xl mx-auto">
+                <!-- 左侧：立绘与核心数值 -->
+                <div class="md:w-1/3 sticky top-24">
+                    <div class="relative group">
+                        <img src="资源/立绘/ST04S_A010.png" alt="Profile" class="rounded-2xl shadow-2xl border-2 border-[#d4e5f8] bg-gray-50 transition-transform duration-500 group-hover:scale-[1.02]">
+                        <div class="absolute -bottom-4 -right-4 bg-[#776d82] text-white py-2 px-6 rounded-lg shadow-lg">
+                            <p class="text-sm font-medium">CV: 凉森ちさと</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-10 grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-400 uppercase mb-1">生日 / Birthday</p>
+                            <p class="font-bold text-[#776d82]">7月13日</p>
+                        </div>
+                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-400 uppercase mb-1">血型 / Blood Type</p>
+                            <p class="font-bold text-[#776d82]">B型</p>
+                        </div>
+                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-400 uppercase mb-1">身高 / Height</p>
+                            <p class="font-bold text-[#776d82]">162cm</p>
+                        </div>
+                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-400 uppercase mb-1">体重 / Weight</p>
+                            <p class="font-bold text-[#776d82]">50kg</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-gradient-to-br from-[#776d82] to-[#4a4453] rounded-2xl text-white shadow-lg">
+                        <p class="text-lg font-medium leading-relaxed italic">
+                            “没办法了呢…你救了我的事，要对奏龙保密哟”
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 右侧：详尽档案内容 -->
+                <div class="md:w-2/3 space-y-10">
+                    <!-- 核心身份 -->
+                    <div class="relative">
+                        <div class="absolute -left-4 top-0 bottom-0 w-1 bg-[#d4e5f8] rounded-full"></div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6 pl-4">白鹭 茉百合 <span class="text-xl font-normal text-gray-400 ml-2">Mayuri Shiragiku</span></h3>
+                        <div class="space-y-4 text-gray-700">
+                            <p class="text-xl font-medium text-[#776d82] leading-relaxed">
+                                （优雅高贵、完美的学生会副会长）
+                            </p>
+                            <p class="leading-relaxed text-lg">
+                                私立凤缭兰学园的学生会副会长，晶的上级生。在学园内是与缭兰会的水无濑樱子平分秋色的学园偶像般的存在。
+                            </p>
+                            <p class="leading-relaxed">
+                                她与另一位副会长八重野萤共同处理了学生会的几乎所有繁杂事务，其出色的工作效率和待人接物的手段深受全校信赖。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 性格与能力 -->
+                    <div class="bg-[#f8f9fa] p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                        </div>
+                        <h4 class="text-2xl font-bold text-[#776d82] mb-6 flex items-center">
+                            <i class="mr-3 text-xl">✨</i> 性格与能力
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <p class="leading-relaxed">
+                                    性格文静而温柔，高贵而优雅。不仅容貌端庄，更拥有优秀的成绩与全能的运动神经。做任何事都毫无疏漏，极具领悟力。
+                                </p>
+                                <p class="leading-relaxed">
+                                    对于晶而言，她既是令人景仰的前辈，也是商量人际关系与学习问题的绝佳对象。
+                                </p>
+                            </div>
+                            <div class="bg-white/60 p-5 rounded-2xl border border-red-50">
+                                <p class="text-red-800 font-bold mb-2 flex items-center">
+                                    <span class="w-2 h-2 bg-red-800 rounded-full mr-2"></span> 腹黑属性
+                                </p>
+                                <p class="text-gray-600 text-sm leading-relaxed italic">
+                                    在完美无瑕的女神外表下，其实隐藏着相当腹黑的一面。为了维持人际关系的圆滑，她早已习惯了彻底演绎“温驯小猫”的姿态。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 人际关系 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="p-6 bg-white border-2 border-[#d4e5f8] rounded-2xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-4 flex items-center">
+                                <span class="w-2 h-6 bg-[#d4e5f8] mr-3 rounded-full"></span> 社交纽带
+                            </h4>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                与缭兰会的水无濑樱子关系如亲姐妹般要好，私下里经常协助处理缭兰会的各项事务，展现了极强的跨组织协调能力。
+                            </p>
+                        </div>
+                        <div class="p-6 bg-white border-2 border-[#d4e5f8] rounded-2xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-4 flex items-center">
+                                <span class="w-2 h-6 bg-[#d4e5f8] mr-3 rounded-full"></span> 关于婚约
+                            </h4>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                虽是学生会会长皇奏龙的婚约者，但这更多是为了逃避繁琐社交的对策。她能以完美的笑容应对会长的奇言怪行，内心却早已定下适时取消婚约的计划。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 隐藏的过往与创伤 -->
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <h4 class="text-2xl font-bold text-gray-800">隐藏的过往</h4>
+                            <div class="flex-grow h-px bg-gray-200"></div>
+                        </div>
+                        
+                        <div class="p-8 bg-gray-50 rounded-3xl space-y-6 border border-gray-100">
+                            <div>
+                                <h5 class="font-bold text-[#776d82] mb-3 flex items-center">名门之后</h5>
+                                <p class="text-gray-600 leading-relaxed">
+                                    作为名门白鹭家的四女，自幼接受一流的精英教育。然而鲜为人知的是，她其实是父亲与仆人私通所生。这一身份让她在家族中备受祖母冷落，也促使她形成了必须表现完美的防御性人格。
+                                </p>
+                            </div>
+                            
+                            <div class="pt-6 border-t border-gray-200">
+                                <h5 class="font-bold text-red-400 mb-3 flex items-center">无法忘却的创伤</h5>
+                                <p class="text-gray-600 leading-relaxed mb-4">
+                                    四年前目睹了守护自己的刑警葛木茂树在眼前被枪杀。这位曾给予她如父般温暖的人的离去，成为了她内心最深的阴影。
+                                </p>
+                                <div class="bg-white/80 p-4 rounded-xl text-sm text-gray-500 italic">
+                                    直至今日，她仍会因突如其来的巨响而感到恐惧。她一直在尽力寻找那位刑警被捐赠的心脏的下落，仿佛那是她唯一的救赎。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CG 展示区 -->
+    <section id="visuals" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-gray-800 mb-12 text-center">CG展示</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="gallery-grid">
+                <!-- CG 项将由 JS 动态生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CG 灯箱 -->
+    <div id="cg-lightbox" onclick="closeLightbox()" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 transition-all duration-500 opacity-0 pointer-events-none cursor-zoom-out">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white hover:text-[#d4e5f8] transition-colors z-[110]">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="max-w-5xl w-full flex flex-col items-center cursor-default" onclick="event.stopPropagation()">
+            <img id="lightbox-img" src="" alt="放大图片" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl border-2 border-white/20 object-contain transition-transform duration-500 scale-90">
+            <p id="lightbox-text" class="mt-6 text-white text-xl font-medium tracking-wide text-center bg-black/40 px-8 py-3 rounded-full backdrop-blur-sm border border-white/10 transition-all duration-500 translate-y-4 opacity-0"></p>
+        </div>
+    </div>
+
+    <!-- 场景立绘组合器 -->
+    <section id="composite" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">场景立绘</h2>
+            <p class="text-center text-gray-500 mb-12">自由组合背景与角色立绘</p>
+
+            <div class="max-w-5xl mx-auto">
+                <!-- 预览框 -->
+                <div id="comp-preview-box" class="composite-preview relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl border-4 border-[#d4e5f8] flex items-center justify-center bg-gray-100">
+                    <div id="comp-placeholder" class="text-gray-400 text-xl font-medium z-10">请选择场景与立绘</div>
+                    <img id="bg-layer" class="absolute inset-0 w-full h-full object-cover hidden" src="" alt="背景层">
+                    <img id="standing-layer" class="absolute bottom-0 left-1/2 -translate-x-1/2 h-[90%] object-contain hidden pointer-events-none" src="" alt="立绘层">
+                </div>
+
+                <!-- 控制台 -->
+                <div class="mt-12 bg-[#f8f9fa] p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex space-x-2">
+                            <button onclick="switchTab('bg')" id="tab-bg" class="px-6 py-2 rounded-xl bg-[#776d82] text-white font-medium transition-all shadow-md">背景选择</button>
+                            <button onclick="switchTab('standing')" id="tab-standing" class="px-6 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-all">立绘选择</button>
+                        </div>
+                        <button onclick="resetComposite()" class="text-sm text-red-400 hover:text-red-500 font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            重置
+                        </button>
+                    </div>
+
+                    <!-- 选择列表 -->
+                        <div id="bg-selector" class="selector-grid flex overflow-x-auto space-x-4 pb-4 custom-scrollbar">
+                            <!-- 背景项将由 JS 生成 -->
+                        </div>
+                        <div id="standing-selector" class="selector-grid hidden grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                            <!-- 立绘项将由 JS 生成 -->
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 bg-gray-900 text-white text-center">
+        <p class="text-gray-400">© 织工</p>
+    </footer>
+
+    <script>
+        // BGM 播放器逻辑
+        const playlist = [
+            { name: "white-clover", path: "资源/BGM/05 white-clover.mp3", available: true },
+            { name: "Comfortable School Life", path: "资源/BGM/03 Comfortable School Life.mp3", available: true },
+            { name: "P-R-I-S-M", path: "资源/BGM/04 P-R-I-S-M.mp3", available: true },
+            { name: "Flyable Heart", path: "资源/BGM/17 Flyable Heart ~lnstrumental ver..mp3", available: true },
+            { name: "DonaDona-Doughnuts!", path: "资源/BGM/02 DonaDona-Doughnuts!⭐.mp3", available: true },
+            { name: "Cubic Rhythm", path: "资源/BGM/13 Cubic Rhythm.mp3", available: true },
+            { name: "Cheerfully Steps♪", path: "资源/BGM/16 Cheerfully Steps♪.mp3", available: true }
+        ];
+
+        let currentTrackIndex = 0;
+        const audio = document.getElementById('main-audio');
+        const source = document.getElementById('audio-source');
+        const trackNameLabel = document.getElementById('current-track-name');
+        const playlistContainer = document.getElementById('playlist');
+        const fixedPlayer = document.getElementById('fixed-player');
+
+        function renderPlaylist() {
+            playlistContainer.innerHTML = '';
+            playlist.forEach((track, index) => {
+                const item = document.createElement('div');
+                item.className = `playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
+                item.innerText = `${index + 1}. ${track.name}`;
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    loadTrack(index);
+                };
+                playlistContainer.appendChild(item);
+            });
+        }
+
+        function togglePlayer() {
+            fixedPlayer.classList.toggle('collapsed');
+        }
+
+        function loadTrack(index) {
+            currentTrackIndex = index;
+            source.src = playlist[index].path;
+            trackNameLabel.innerText = playlist[index].name;
+            renderPlaylist();
+            audio.load();
+            audio.play().catch(e => console.log("播放被拦截"));
+        }
+
+        audio.addEventListener('ended', () => {
+            let nextIndex = (currentTrackIndex + 1) % playlist.length;
+            loadTrack(nextIndex);
+        });
+
+        // 画廊筛选功能
+        function filterGallery(category) {
+            const items = document.querySelectorAll('.gallery-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-[#776d82]', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-600');
+            });
+            event.target.classList.remove('bg-white', 'text-gray-600');
+            event.target.classList.add('bg-[#776d82]', 'text-white');
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // CG 数据
+        const cgData = [
+            { path: "资源/剧照/EV011A.png", title: "这里写文字内容1" },
+            { path: "资源/剧照/EV025A.png", title: "这里写文字内容2" },
+            { path: "资源/剧照/EV025B.png", title: "这里写文字内容3" },
+            { path: "资源/剧照/EV501A.png", title: "这里写文字内容4" },
+            { path: "资源/剧照/EV507A.png", title: "这里写文字内容5" },
+            { path: "资源/剧照/MEV001A.png", title: "这里写文字内容6" },
+            { path: "资源/剧照/MEV035B.png", title: "这里写文字内容7" },
+            { path: "资源/剧照/MEV045A.png", title: "这里写文字内容8" }
+        ];
+
+        function initCG() {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+            cgData.forEach((cg, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item cg group relative overflow-hidden rounded-xl shadow-md aspect-video cursor-pointer';
+                item.innerHTML = `
+                    <img src="${cg.path}" alt="${cg.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4 text-center">
+                        <span class="text-white font-medium text-sm md:text-base">${cg.title}</span>
+                    </div>
+                `;
+                item.onclick = () => openLightbox(index);
+                grid.appendChild(item);
+            });
+        }
+
+        function openLightbox(index) {
+            const cg = cgData[index];
+            const lightbox = document.getElementById('cg-lightbox');
+            const img = document.getElementById('lightbox-img');
+            const text = document.getElementById('lightbox-text');
+            
+            img.src = cg.path;
+            text.innerText = cg.title;
+            
+            // 显示灯箱并触发动画
+            lightbox.classList.remove('opacity-0', 'pointer-events-none');
+            lightbox.classList.add('opacity-100', 'pointer-events-auto');
+            
+            // 延迟一点触发内容动画，确保过渡平滑
+            setTimeout(() => {
+                img.classList.remove('scale-90');
+                img.classList.add('scale-100');
+                text.classList.remove('translate-y-4', 'opacity-0');
+                text.classList.add('translate-y-0', 'opacity-100');
+            }, 50);
+            
+            document.body.style.overflow = 'hidden'; // 禁止滚动
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('cg-lightbox');
+            const img = document.getElementById('lightbox-img');
+            const text = document.getElementById('lightbox-text');
+            
+            // 触发收起动画
+            img.classList.remove('scale-100');
+            img.classList.add('scale-90');
+            text.classList.remove('translate-y-0', 'opacity-100');
+            text.classList.add('translate-y-4', 'opacity-0');
+            
+            // 动画结束后隐藏灯箱
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-100', 'pointer-events-auto');
+                lightbox.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = ''; // 恢复滚动
+            }, 300);
+        }
+
+        // 场景立绘组合器逻辑
+        const bgAssets = ["BK001D.png", "BK004D.png", "BK006D.png", "BK007D.png", "BK008D.png", "BK011D.png", "BK012D.png", "BK016D.png", "BK018D.png", "BK102D.png", "BK111NN.png", "BK114D.png", "BK115D.png", "BK116D.png", "BK117D.png", "BK121D.png", "BK122D.png", "BK201D.png", "BK202D.png"];
+        const standingAssets = [
+            "ST04H_A010.png", "ST04H_A020.png", "ST04H_A030.png", "ST04H_A040.png", "ST04H_A050.png", "ST04H_A060.png", "ST04H_A061.png", "ST04H_A070.png", "ST04H_A080.png", "ST04H_A081.png", "ST04H_A090.png", "ST04H_A100.png", "ST04H_A110.png", "ST04H_A111.png", "ST04H_B010.png", "ST04H_B020.png", "ST04H_B030.png", "ST04H_B040.png", "ST04H_B060.png", "ST04H_B080.png", "ST04H_B100.png", "ST04H_B110.png", "ST04H_B170.png", "ST04H_B180.png", "ST04L_A010.png", "ST04L_A020.png", "ST04L_A030.png", "ST04L_A040.png", "ST04L_A050.png", "ST04L_A060.png", "ST04L_A080.png", "ST04L_A090.png", "ST04L_A100.png", "ST04L_A110.png", "ST04M_A010.png", "ST04M_A060.png", "ST04M_A080.png", "ST04M_B010.png", "ST04M_B060.png", "ST04M_B070.png", "ST04S_A010.png", "ST04S_A020.png", "ST04S_A030.png", "ST04S_A040.png", "ST04S_A050.png", "ST04S_A060.png", "ST04S_A070.png", "ST04S_A080.png", "ST04S_A090.png", "ST04S_A091.png", "ST04S_A100.png", "ST04S_A110.png", "ST04S_A160.png", "ST04S_B010.png", "ST04S_B020.png", "ST04S_B030.png", "ST04S_B040.png", "ST04S_B050.png", "ST04S_B060.png", "ST04S_B070.png", "ST04S_B080.png", "ST04S_B081.png", "ST04S_B090.png", "ST04S_B100.png", "ST04S_B110.png", "ST04S_B160.png"
+        ];
+
+        function initComposite() {
+            const bgContainer = document.getElementById('bg-selector');
+            const standingContainer = document.getElementById('standing-selector');
+            
+            // 清空容器以防重复初始化
+            bgContainer.innerHTML = '';
+            standingContainer.innerHTML = '';
+
+            bgAssets.forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#776d82] transition-all relative group';
+                item.innerHTML = `
+                    <img src="资源/背景/${file}" class="w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                `;
+                item.onclick = () => selectAsset('bg', file, item);
+                bgContainer.appendChild(item);
+            });
+            standingAssets.forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'w-full aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#776d82] transition-all bg-gray-200 relative group';
+                item.innerHTML = `
+                    <img src="资源/立绘/${file}" class="w-full h-full object-contain" loading="lazy">
+                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                `;
+                item.onclick = () => selectAsset('standing', file, item);
+                standingContainer.appendChild(item);
+            });
+        }
+
+        function switchTab(type) {
+            const bgTab = document.getElementById('tab-bg');
+            const stTab = document.getElementById('tab-standing');
+            const bgSel = document.getElementById('bg-selector');
+            const stSel = document.getElementById('standing-selector');
+            if (type === 'bg') {
+                bgTab.className = 'px-6 py-2 rounded-xl bg-[#776d82] text-white font-medium transition-all shadow-md';
+                stTab.className = 'px-6 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-all';
+                bgSel.classList.remove('hidden');
+                stSel.classList.add('hidden');
+            } else {
+                stTab.className = 'px-6 py-2 rounded-xl bg-[#776d82] text-white font-medium transition-all shadow-md';
+                bgTab.className = 'px-6 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-all';
+                stSel.classList.remove('hidden');
+                bgSel.classList.add('hidden');
+            }
+        }
+
+        function selectAsset(type, file, element) {
+            const layer = document.getElementById(type === 'bg' ? 'bg-layer' : 'standing-layer');
+            const placeholder = document.getElementById('comp-placeholder');
+            
+            // 设置图片并显示层
+            layer.src = `资源/${type === 'bg' ? '背景' : '立绘'}/${file}`;
+            layer.classList.remove('hidden');
+            
+            // 只有当两个图层都有图片时才完全隐藏占位符，或者根据用户需求直接隐藏
+            placeholder.classList.add('hidden');
+            
+            // 处理选中状态样式
+            const container = element.parentElement;
+            container.querySelectorAll('div').forEach(div => {
+                div.classList.remove('border-[#776d82]', 'scale-95', 'shadow-inner');
+            });
+            element.classList.add('border-[#776d82]', 'scale-95', 'shadow-inner');
+            
+            // 简单的入场动画效果
+            layer.style.opacity = '0';
+            layer.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                layer.style.opacity = '1';
+            }, 50);
+        }
+
+        function resetComposite() {
+            document.getElementById('bg-layer').classList.add('hidden');
+            document.getElementById('standing-layer').classList.add('hidden');
+            document.getElementById('comp-placeholder').classList.remove('hidden');
+            document.querySelectorAll('.selector-grid div').forEach(div => div.classList.remove('border-[#776d82]', 'scale-95'));
+        }
+
+        window.addEventListener('load', () => {
+            initComposite();
+            initCG();
+            renderPlaylist();
+        });
+    </script>
+</body>
+</html>
