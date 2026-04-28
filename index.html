@@ -200,6 +200,85 @@
             background: var(--secondary-color);
             border-radius: 10px;
         }
+
+        /* 人际关系网样式 */
+        .relation-container {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            background: radial-gradient(circle at center, #fff 0%, #f9fafb 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        .relation-node {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+        .relation-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            object-fit: cover;
+            background: white;
+        }
+        .relation-label {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #4a4453;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #f0f0f0;
+        }
+        .relation-line-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .relation-label-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .relation-tag {
+            font-size: 0.75rem;
+            fill: #776d82;
+            font-weight: bold;
+            paint-order: stroke;
+            stroke: #fff;
+            stroke-width: 4px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .node-main {
+            width: 120px;
+            height: 120px;
+        }
+        .node-main .relation-avatar {
+            border-color: #d4e5f8;
+            box-shadow: 0 0 0 6px rgba(212, 229, 248, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -234,6 +313,7 @@
             <div class="space-x-8">
                 <a href="#home" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">首页</a>
                 <a href="#profile" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">角色档案</a>
+                <a href="#relations" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">人际关系</a>
                 <a href="#visuals" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">CG展示</a>
                 <a href="#composite" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">场景立绘</a>
             </div>
@@ -397,6 +477,111 @@
         </div>
     </section>
 
+    <!-- 人际关系区 -->
+    <section id="relations" class="py-20 bg-[#f8f9fa]">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">人际关系</h2>
+            <p class="text-center text-gray-500 mb-12">茉百合与其身边人们的复杂纽带</p>
+            
+            <div class="max-w-6xl mx-auto relation-container shadow-inner" id="relation-canvas">
+                <svg class="relation-line-layer" id="relation-lines"></svg>
+                <svg class="relation-label-layer" id="relation-labels"></svg>
+                
+                <!-- 白鹭茉百合 (中心) -->
+                <div class="relation-node node-main" style="left: 50%; top: 50%;" data-name="白鹭茉百合">
+                    <img src="资源/头像/白鹭茉百合.png" alt="白鹭茉百合" class="relation-avatar">
+                    <div class="relation-label">白鹭 茉百合</div>
+                </div>
+
+                <!-- 葛木晶 -->
+                <div class="relation-node" style="left: 50%; top: 92%;" data-name="葛木晶">
+                    <img src="资源/头像/葛木晶.png" alt="葛木晶" class="relation-avatar">
+                    <div class="relation-label">葛木 晶</div>
+                </div>
+
+                <!-- 葛木茂树 -->
+                <div class="relation-node" style="left: 88%; top: 78%;" data-name="葛木茂树">
+                    <img src="资源/头像/葛木茂树.png" alt="葛木茂树" class="relation-avatar">
+                    <div class="relation-label">葛木 茂树</div>
+                </div>
+
+                <!-- 茉百合之父 (无头像) -->
+                <div class="relation-node" style="left: 12%; top: 12%;" data-name="茉百合之父">
+                    <div class="relation-avatar flex items-center justify-center bg-gray-100 border-dashed border-2 border-gray-300">
+                        <svg class="w-10 h-10 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="relation-label">茉百合之父</div>
+                </div>
+
+                <!-- 皇奏龙 -->
+                <div class="relation-node" style="left: 12%; top: 82%;" data-name="皇奏龙">
+                    <img src="资源/头像/皇奏龙.png" alt="皇奏龙" class="relation-avatar">
+                    <div class="relation-label">皇 奏龙</div>
+                </div>
+
+                <!-- 水无濑樱子 -->
+                <div class="relation-node" style="left: 88%; top: 12%;" data-name="水无濑樱子">
+                    <img src="资源/头像/水无濑樱子.png" alt="水无濑樱子" class="relation-avatar">
+                    <div class="relation-label">水无濑 樱子</div>
+                </div>
+
+                <!-- 白鹭巴 -->
+                <div class="relation-node" style="left: 12%; top: 50%;" data-name="白鹭巴">
+                    <img src="资源/头像/白鹭巴.png" alt="白鹭巴" class="relation-avatar">
+                    <div class="relation-label">白鹭 巴</div>
+                </div>
+
+                <!-- 白鹭小百合 -->
+                <div class="relation-node" style="left: 50%; top: 8%;" data-name="白鹭小百合">
+                    <img src="资源/头像/白鹭小百合.png" alt="白鹭小百合" class="relation-avatar">
+                    <div class="relation-label">白鹭 小百合</div>
+                </div>
+            </div>
+
+            <!-- 沉痛的秘密 入口 -->
+            <div class="mt-12 text-center">
+                <button onclick="showSecretWarning()" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-gray-800 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 hover:bg-gray-700">
+                    <span class="mr-2">沉痛的秘密</span>
+                    <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 剧透警告弹窗 -->
+    <div id="secret-warning-modal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-3xl max-w-md w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300" id="warning-content">
+            <div class="text-red-500 mb-4 flex justify-center">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 text-center mb-4">剧透预警</h3>
+            <p class="text-gray-600 text-center mb-8 leading-relaxed">
+                此处包含严重剧透并可能令人不适。<br>是否要继续查看？
+            </p>
+            <div class="flex space-x-4">
+                <button onclick="hideSecretWarning()" class="flex-1 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition-colors">否</button>
+                <button onclick="confirmShowSecret()" class="flex-1 py-3 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors shadow-lg shadow-red-200">是</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 秘密内容灯箱 -->
+    <div id="secret-content-lightbox" class="fixed inset-0 z-[210] flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-500">
+        <button onclick="closeSecretLightbox()" class="absolute top-6 right-6 text-white hover:text-red-400 transition-colors z-[220]">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="max-w-4xl w-full mx-6 bg-white/5 border border-white/10 p-10 rounded-3xl backdrop-blur-xl max-h-[80vh] overflow-y-auto custom-scrollbar shadow-2xl">
+            <h2 class="text-3xl font-bold text-white mb-8 text-center tracking-widest border-b border-white/10 pb-6">沉痛的秘密</h2>
+            <div class="text-gray-300 leading-loose text-lg whitespace-pre-wrap">茉百合的身世是白鹭家一家的悲剧核心，除了祖母白鹭巴，白鹭小百合以外，家中其他人以及茉百合自己看来，小百合是四姐妹中年龄最大的姐姐。然而小百合是茉百合的生母，小白合幼时曾遭到其生父长期施暴，最终在白鹭巴的协助下与外地生下茉百合，而后父亲早逝。为掩盖这件家族丑闻、保全小百合，白鹭巴对外编造说辞，称小白合出国留学，将茉百合伪造成自己的儿子也就是茉百合生父与家中下人的私生女，成为家中排行第四的妹妹，强行给她安上带有下人平民血脉的低贱出身污点。在此基础上，她结合茉百合被捏造的污点出身，为其量身规划好了全套人生走向，特意安排茉百合入读凤缭兰学园，打算让茉百合依靠与皇奏龙的联姻改换身份、洗白出身，既保全白鹭家整体家族利益，也变相为茉百合谋求安稳体面的归宿。最终在巧合之下被白鹭家二女锦小路霞织发现，但也未揭穿。葛木晶与茉百合的出走，脱身于白鹭家族，也让这件事永远可能成为了秘密。</div>
+        </div>
+    </div>
+
     <!-- CG 展示区 -->
     <section id="visuals" class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
@@ -466,9 +651,7 @@
         // BGM 播放器逻辑
         const playlist = [
             { name: "white-clover", path: "资源/BGM/05 white-clover.mp3", available: true },
-            { name: "Comfortable School Life", path: "资源/BGM/03 Comfortable School Life.mp3", available: true },
             { name: "P-R-I-S-M", path: "资源/BGM/04 P-R-I-S-M.mp3", available: true },
-            { name: "Flyable Heart", path: "资源/BGM/17 Flyable Heart ~lnstrumental ver..mp3", available: true },
             { name: "DonaDona-Doughnuts!", path: "资源/BGM/02 DonaDona-Doughnuts!⭐.mp3", available: true },
             { name: "Cubic Rhythm", path: "资源/BGM/13 Cubic Rhythm.mp3", available: true },
             { name: "Cheerfully Steps♪", path: "资源/BGM/16 Cheerfully Steps♪.mp3", available: true }
@@ -514,15 +697,19 @@
         });
 
         // 画廊筛选功能
-        function filterGallery(category) {
+        function filterGallery(category, event) {
             const items = document.querySelectorAll('.gallery-item');
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('bg-[#776d82]', 'text-white');
                 btn.classList.add('bg-white', 'text-gray-600');
             });
-            event.target.classList.remove('bg-white', 'text-gray-600');
-            event.target.classList.add('bg-[#776d82]', 'text-white');
+            
+            if (event && event.target) {
+                event.target.classList.remove('bg-white', 'text-gray-600');
+                event.target.classList.add('bg-[#776d82]', 'text-white');
+            }
+
             items.forEach(item => {
                 if (category === 'all' || item.classList.contains(category)) {
                     item.style.display = 'block';
@@ -534,14 +721,18 @@
 
         // CG 数据
         const cgData = [
-            { path: "资源/剧照/EV011A.png", title: "这里写文字内容1" },
-            { path: "资源/剧照/EV025A.png", title: "这里写文字内容2" },
-            { path: "资源/剧照/EV025B.png", title: "这里写文字内容3" },
-            { path: "资源/剧照/EV501A.png", title: "这里写文字内容4" },
-            { path: "资源/剧照/EV507A.png", title: "这里写文字内容5" },
-            { path: "资源/剧照/MEV001A.png", title: "这里写文字内容6" },
-            { path: "资源/剧照/MEV035B.png", title: "这里写文字内容7" },
-            { path: "资源/剧照/MEV045A.png", title: "这里写文字内容8" }
+            { path: "资源/剧照/EV011A.png", title: "会长对新人晶下达了通关游戏的任务，茉百合予以帮助" },
+            { path: "资源/剧照/EV025A.png", title: "在沙滩聚会后，半夜醒来的晶与茉百合的邂逅" },
+            { path: "资源/剧照/EV025B.png", title: "学校举行花火大会，晶与茉百合一同观看" },
+            { path: "资源/剧照/EV501A.png", title: "白鹭魔百合" },
+            { path: "资源/剧照/EV507A.png", title: "葛木茂树的大手与小茉百合，小茉百合感受到了许久没有的父爱感" },
+            { path: "资源/剧照/MEV001A.png", title: "君影里前往学校的桥上，晶与茉百合的初次相见" },
+            { path: "资源/剧照/MEV007A.png", title: "仓库里发生的事，是契机，还是危机？" },
+            { path: "资源/剧照/MEV011C.png", title: "茉百合本以为葛木茂树已经逝去，却因为巧合拨通了他的电话" },
+            { path: "资源/剧照/MEV035B.png", title: "小白鹭茉百合" },
+            { path: "资源/剧照/MEV044D.png", title: "历经磨难，晶与茉百合" },
+            { path: "资源/剧照/MEV045A.png", title: "历经磨难，晶与茉百合" },
+            { path: "资源/剧照/MEV051A.png", title: "晶受到了茉百合娘家的排斥，茉百合为他做饭" }
         ];
 
         function initCG() {
@@ -605,9 +796,9 @@
         }
 
         // 场景立绘组合器逻辑
-        const bgAssets = ["BK001D.png", "BK004D.png", "BK006D.png", "BK007D.png", "BK008D.png", "BK011D.png", "BK012D.png", "BK016D.png", "BK018D.png", "BK102D.png", "BK111NN.png", "BK114D.png", "BK115D.png", "BK116D.png", "BK117D.png", "BK121D.png", "BK122D.png", "BK201D.png", "BK202D.png"];
+        const bgAssets = ["BK001D.png", "BK004D.png", "BK006D.png", "BK008D.png", "BK011D.png", "BK012D.png", "BK016D.png", "BK018D.png", "BK102D.png", "BK114D.png", "BK115D.png", "BK117D.png", "BK121D.png", "BK122D.png", "BK202D.png"];
         const standingAssets = [
-            "ST04H_A010.png", "ST04H_A020.png", "ST04H_A030.png", "ST04H_A040.png", "ST04H_A050.png", "ST04H_A060.png", "ST04H_A061.png", "ST04H_A070.png", "ST04H_A080.png", "ST04H_A081.png", "ST04H_A090.png", "ST04H_A100.png", "ST04H_A110.png", "ST04H_A111.png", "ST04H_B010.png", "ST04H_B020.png", "ST04H_B030.png", "ST04H_B040.png", "ST04H_B060.png", "ST04H_B080.png", "ST04H_B100.png", "ST04H_B110.png", "ST04H_B170.png", "ST04H_B180.png", "ST04L_A010.png", "ST04L_A020.png", "ST04L_A030.png", "ST04L_A040.png", "ST04L_A050.png", "ST04L_A060.png", "ST04L_A080.png", "ST04L_A090.png", "ST04L_A100.png", "ST04L_A110.png", "ST04M_A010.png", "ST04M_A060.png", "ST04M_A080.png", "ST04M_B010.png", "ST04M_B060.png", "ST04M_B070.png", "ST04S_A010.png", "ST04S_A020.png", "ST04S_A030.png", "ST04S_A040.png", "ST04S_A050.png", "ST04S_A060.png", "ST04S_A070.png", "ST04S_A080.png", "ST04S_A090.png", "ST04S_A091.png", "ST04S_A100.png", "ST04S_A110.png", "ST04S_A160.png", "ST04S_B010.png", "ST04S_B020.png", "ST04S_B030.png", "ST04S_B040.png", "ST04S_B050.png", "ST04S_B060.png", "ST04S_B070.png", "ST04S_B080.png", "ST04S_B081.png", "ST04S_B090.png", "ST04S_B100.png", "ST04S_B110.png", "ST04S_B160.png"
+            "ST04H_A010.png", "ST04H_A020.png", "ST04H_A110.png", "ST04H_B010.png", "ST04H_B020.png", "ST04H_B030.png", "ST04H_B040.png", "ST04H_B060.png", "ST04H_B110.png", "ST04L_A010.png", "ST04L_A020.png", "ST04S_A010.png", "ST04S_A020.png", "ST04S_A060.png", "ST04S_B010.png", "ST04S_B020.png", "ST04S_B040.png", "ST04S_B060.png"
         ];
 
         function initComposite() {
@@ -691,11 +882,129 @@
             document.querySelectorAll('.selector-grid div').forEach(div => div.classList.remove('border-[#776d82]', 'scale-95'));
         }
 
+        // 人际关系网绘制逻辑
+        function drawRelations() {
+            const canvas = document.getElementById('relation-canvas');
+            const svgLines = document.getElementById('relation-lines');
+            const svgLabels = document.getElementById('relation-labels');
+            const nodes = document.querySelectorAll('.relation-node');
+            const nodeMap = {};
+            
+            nodes.forEach(node => {
+                const name = node.getAttribute('data-name');
+                nodeMap[name] = node;
+            });
+
+            const relations = [
+                { from: '白鹭茉百合', to: '葛木晶', label: '学姐 / 恋人' },
+                { from: '白鹭茉百合', to: '葛木茂树', label: '被保护人 / 恩人' },
+                { from: '葛木茂树', to: '葛木晶', label: '父亲' },
+                { from: '白鹭茉百合', to: '皇奏龙', label: '副会长 / 婚约者' },
+                { from: '白鹭茉百合', to: '水无濑樱子', label: '好友' },
+                { from: '水无濑樱子', to: '葛木茂树', label: '心脏捐献 / 被捐献', dashed: true },
+                { from: '白鹭茉百合', to: '白鹭巴', label: '孙女' },
+                { from: '白鹭茉百合', to: '白鹭小百合', label: '妹妹?' },
+                { from: '白鹭巴', to: '茉百合之父', label: '儿子' },
+                { from: '茉百合之父', to: '白鹭小百合', label: '父亲 / ？' },
+                { from: '茉百合之父', to: '白鹭茉百合', label: '父亲' }
+            ];
+
+            svgLines.innerHTML = '';
+            svgLabels.innerHTML = '';
+            const canvasRect = canvas.getBoundingClientRect();
+
+            relations.forEach(rel => {
+                const nodeA = nodeMap[rel.from];
+                const nodeB = nodeMap[rel.to];
+                if (!nodeA || !nodeB) return;
+
+                const rectA = nodeA.getBoundingClientRect();
+                const rectB = nodeB.getBoundingClientRect();
+
+                const x1 = rectA.left + rectA.width / 2 - canvasRect.left;
+                const y1 = rectA.top + rectA.height / 2 - canvasRect.top;
+                const x2 = rectB.left + rectB.width / 2 - canvasRect.left;
+                const y2 = rectB.top + rectB.height / 2 - canvasRect.top;
+
+                // 绘制连线
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x1);
+                line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2);
+                line.setAttribute("y2", y2);
+                line.setAttribute("stroke", rel.dashed ? "#d4e5f8" : "#776d82");
+                line.setAttribute("stroke-width", "2");
+                line.setAttribute("opacity", "0.6");
+                if (rel.dashed) {
+                    line.setAttribute("stroke-dasharray", "8,8");
+                }
+                svgLines.appendChild(line);
+
+                // 绘制文字标签 (在独立层)
+                const textX = (x1 + x2) / 2;
+                const textY = (y1 + y2) / 2;
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", textX);
+                text.setAttribute("y", textY);
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("dominant-baseline", "middle");
+                text.setAttribute("class", "relation-tag");
+                text.textContent = rel.label;
+                svgLabels.appendChild(text);
+            });
+        }
+
         window.addEventListener('load', () => {
             initComposite();
             initCG();
             renderPlaylist();
+            drawRelations();
         });
+
+        window.addEventListener('resize', drawRelations);
+
+        // 沉痛的秘密 交互逻辑
+        function showSecretWarning() {
+            const modal = document.getElementById('secret-warning-modal');
+            const content = document.getElementById('warning-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            setTimeout(() => {
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideSecretWarning() {
+            const modal = document.getElementById('secret-warning-modal');
+            const content = document.getElementById('warning-content');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.remove('opacity-100', 'pointer-events-auto');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function confirmShowSecret() {
+            hideSecretWarning();
+            setTimeout(() => {
+                const lightbox = document.getElementById('secret-content-lightbox');
+                lightbox.classList.remove('opacity-0', 'pointer-events-none');
+                lightbox.classList.add('opacity-100', 'pointer-events-auto');
+                document.body.style.overflow = 'hidden';
+            }, 400);
+        }
+
+        function closeSecretLightbox() {
+            const lightbox = document.getElementById('secret-content-lightbox');
+            lightbox.classList.remove('opacity-100', 'pointer-events-auto');
+            lightbox.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = '';
+        }
     </script>
 </body>
 </html>
