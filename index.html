@@ -7,109 +7,421 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --theme-color: #776d82; 
-            --secondary-color: #d4e5f8;
+            --theme-color: #7e6a88;
+            --theme-deep: #2d2437;
+            --theme-ink: #241b2c;
+            --secondary-color: #d8e6f8;
+            --surface: rgba(255, 255, 255, 0.68);
+            --surface-strong: rgba(255, 255, 255, 0.88);
+            --line-soft: rgba(126, 106, 136, 0.16);
+            --shadow-soft: 0 24px 60px rgba(44, 33, 55, 0.12);
+            --shadow-card: 0 20px 50px rgba(55, 37, 66, 0.14);
         }
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        html {
             scroll-behavior: smooth;
         }
+
+        body {
+            position: relative;
+            margin: 0;
+            color: var(--theme-ink);
+            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(214, 196, 228, 0.95), transparent 32%),
+                radial-gradient(circle at 82% 14%, rgba(197, 225, 252, 0.9), transparent 26%),
+                linear-gradient(180deg, #f6f1f9 0%, #f8fafc 24%, #fcfcfd 52%, #f5f4f8 100%);
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: auto;
+            width: 28rem;
+            height: 28rem;
+            border-radius: 999px;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.38;
+        }
+
+        body::before {
+            top: -8rem;
+            left: -6rem;
+            background: rgba(194, 171, 210, 0.95);
+        }
+
+        body::after {
+            right: -7rem;
+            bottom: 8rem;
+            background: rgba(187, 216, 245, 0.86);
+        }
+
+        a,
+        button {
+            transition: all 0.25s ease;
+        }
+
+        .font-display {
+            font-family: "Georgia", "Times New Roman", "Songti SC", "STSong", serif;
+            letter-spacing: 0.02em;
+        }
+
+        .section-shell {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-shell::before {
+            content: "";
+            position: absolute;
+            inset: 2.5rem 1.25rem;
+            border-radius: 2rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.14));
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: var(--shadow-soft);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .section-shell > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.55rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--theme-color);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 16px 34px rgba(57, 40, 66, 0.08);
+        }
+
+        .section-kicker::before {
+            content: "";
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #f2d8ff, #a3caef);
+            box-shadow: 0 0 0 6px rgba(216, 230, 248, 0.4);
+        }
+
+        .section-title {
+            margin-top: 1.25rem;
+            font-family: "Georgia", "Times New Roman", "Songti SC", "STSong", serif;
+            font-size: clamp(2.2rem, 4vw, 3.6rem);
+            line-height: 1.05;
+            color: var(--theme-deep);
+            letter-spacing: 0.04em;
+        }
+
+        .section-subtitle {
+            max-width: 34rem;
+            margin: 1rem auto 0;
+            color: rgba(45, 36, 55, 0.68);
+            font-size: 1.02rem;
+            line-height: 1.8;
+        }
+
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.58));
+            border: 1px solid rgba(255, 255, 255, 0.62);
+            backdrop-filter: blur(22px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .soft-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72));
+            border: 1px solid rgba(126, 106, 136, 0.08);
+            box-shadow: 0 18px 42px rgba(53, 36, 62, 0.09);
+        }
+
+        .content-block {
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.64);
+            box-shadow: 0 20px 46px rgba(54, 37, 66, 0.08);
+            backdrop-filter: blur(16px);
+        }
+
+        .site-nav {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+            background: linear-gradient(180deg, rgba(25, 18, 31, 0.5), rgba(25, 18, 31, 0.14));
+            backdrop-filter: blur(22px);
+            box-shadow: 0 14px 45px rgba(11, 8, 15, 0.14);
+        }
+
+        .nav-brand {
+            font-family: "Georgia", "Times New Roman", "Songti SC", serif;
+            font-size: 1.65rem;
+            font-weight: 700;
+            letter-spacing: 0.34em;
+            color: rgba(255, 255, 255, 0.96);
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+            padding: 0.45rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .nav-link {
             position: relative;
-            transition: color 0.3s;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            transition: color 0.3s, background 0.3s, transform 0.3s;
         }
+
         .nav-link::after {
-            content: '';
+            content: "";
             position: absolute;
-            width: 0;
+            left: 1rem;
+            right: 1rem;
+            bottom: 0.45rem;
             height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: var(--theme-color);
-            transition: width 0.3s;
+            transform: scaleX(0);
+            transform-origin: center;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #f4e6ff, #d4e5f8);
+            transition: transform 0.25s ease;
         }
+
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
         .nav-link:hover::after {
-            width: 100%;
+            transform: scaleX(1);
         }
-        /* 首页全屏剧照样式 */
+
         .hero-section {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
-            background-color: #000;
+            isolation: isolate;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(153, 122, 170, 0.2), transparent 30%),
+                radial-gradient(circle at 80% 10%, rgba(197, 224, 247, 0.18), transparent 24%),
+                #0f0b13;
         }
+
         .hero-image {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
+            min-width: 100%;
+            min-height: 100%;
             object-fit: cover;
-            opacity: 0.8;
-            transition: transform 10s ease-out;
+            object-position: center center;
+            opacity: 0.72;
+            filter: saturate(0.92) contrast(1.04);
+            transition: transform 12s ease-out;
         }
+
         .hero-section:hover .hero-image {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(10, 7, 14, 0.36) 0%, rgba(10, 7, 14, 0.55) 48%, rgba(10, 7, 14, 0.82) 100%),
+                radial-gradient(circle at 50% 45%, rgba(247, 236, 255, 0.12), transparent 34%);
+            z-index: 2;
+        }
+
         .hero-content {
             position: absolute;
             z-index: 10;
+            width: min(90vw, 64rem);
             text-align: center;
             color: white;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
+
+        .hero-panel {
+            padding: clamp(2rem, 4vw, 3rem);
+            border-radius: 2rem;
+            background: transparent;
+            border: none;
+            backdrop-filter: none;
+            box-shadow: none;
+        }
+
+        .hero-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.55rem 1rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.78rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .hero-meta::before,
+        .hero-meta::after {
+            content: "";
+            width: 2rem;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+        }
+
+        .hero-upvote {
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.45rem 0.55rem 0.45rem 1rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 12px 28px rgba(7, 6, 10, 0.16);
+        }
+
+        .hero-upvote-label {
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.76);
+        }
+
+        .hero-upvote-count {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.96);
+        }
+
+        .hero-upvote-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 3.4rem;
+            height: 2.4rem;
+            padding: 0 1rem;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(241, 228, 255, 0.98), rgba(214, 232, 249, 0.94));
+            color: #4d4058;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(22, 18, 28, 0.18);
+        }
+
+        .hero-upvote-button:hover {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 14px 28px rgba(22, 18, 28, 0.22);
+        }
+
+        .hero-upvote-button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
         .hero-bg-text {
             position: absolute;
-            font-size: 15rem;
-            font-weight: 900;
-            color: rgba(255, 255, 255, 0.1);
+            font-family: "Georgia", "Times New Roman", "Songti SC", serif;
+            font-size: clamp(5rem, 18vw, 15rem);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            color: rgba(255, 255, 255, 0.08);
             z-index: 1;
             white-space: nowrap;
             user-select: none;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -52%);
         }
-        /* 向下滚动提示 */
+
         .scroll-down {
             position: absolute;
-            bottom: 30px;
+            bottom: 2rem;
             left: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
             transform: translateX(-50%);
             color: white;
             animation: bounce 2s infinite;
             cursor: pointer;
             z-index: 20;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(16px);
         }
+
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(-10px);}
-            60% {transform: translateX(-50%) translateY(-5px);}
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
         }
-        /* 悬浮播放器样式 */
+
         .music-player-fixed {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            right: 1.25rem;
+            bottom: 1.25rem;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--secondary-color);
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 300px;
+            width: 320px;
+            border-radius: 1.6rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.66));
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            box-shadow: 0 26px 55px rgba(38, 27, 48, 0.2);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .music-player-fixed::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.36), transparent 42%);
+            pointer-events: none;
+        }
+
         .music-player-fixed.collapsed {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            border-radius: 999px;
             overflow: hidden;
         }
+
         .player-toggle {
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -117,167 +429,325 @@
             color: var(--theme-color);
             transition: transform 0.3s;
         }
+
         .collapsed .player-toggle {
             transform: rotate(0deg);
         }
+
         .music-player-fixed:not(.collapsed) .player-toggle {
             position: absolute;
-            top: 0;
-            right: 0;
-            height: 40px;
-            width: 40px;
+            top: 0.25rem;
+            right: 0.25rem;
+            width: 42px;
+            height: 42px;
             transform: rotate(180deg);
         }
+
         .player-content {
-            padding: 20px;
+            padding: 1.5rem;
             display: block;
         }
+
         .collapsed .player-content {
             display: none;
         }
+
         .playlist-container {
             max-height: 200px;
             overflow-y: auto;
-            margin-top: 15px;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(126, 106, 136, 0.1);
         }
+
         .playlist-item {
-            padding: 8px 12px;
+            padding: 0.72rem 0.9rem;
             font-size: 0.875rem;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 0.9rem;
             transition: all 0.2s;
-            color: #666;
+            color: rgba(45, 36, 55, 0.62);
         }
+
         .playlist-item:hover {
-            background: var(--secondary-color);
+            background: rgba(216, 230, 248, 0.78);
             color: var(--theme-color);
+            transform: translateX(2px);
         }
+
         .playlist-item.active {
-            background: var(--theme-color);
+            background: linear-gradient(135deg, var(--theme-color), #9d8cab);
             color: white;
+            box-shadow: 0 10px 22px rgba(126, 106, 136, 0.22);
         }
-        /* 自定义滚动条 */
+
         .playlist-container::-webkit-scrollbar {
             width: 4px;
         }
+
         .playlist-container::-webkit-scrollbar-thumb {
             background: var(--secondary-color);
             border-radius: 10px;
         }
-        /* 组合器样式 */
-        .composite-preview {
-            background-image: 
-                linear-gradient(45deg, #eee 25%, transparent 25%), 
-                linear-gradient(-45deg, #eee 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #eee 75%), 
-                linear-gradient(-45deg, transparent 75%, #eee 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+
+        .gallery-item {
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            box-shadow: 0 22px 45px rgba(47, 33, 54, 0.12);
+            transform: translateY(0);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
         }
 
-        /* 自定义滚动条样式 */
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 26px 50px rgba(47, 33, 54, 0.18);
+        }
+
+        .composite-preview {
+            background-image:
+                linear-gradient(45deg, rgba(233, 234, 239, 0.95) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(233, 234, 239, 0.95) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(233, 234, 239, 0.95) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(233, 234, 239, 0.95) 75%);
+            background-color: rgba(255, 255, 255, 0.76);
+            background-size: 22px 22px;
+            background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+        }
+
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: rgba(241, 241, 241, 0.8);
             border-radius: 10px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #d4e5f8;
             border-radius: 10px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #776d82;
         }
+
         .selector-grid::-webkit-scrollbar {
             height: 6px;
         }
+
         .selector-grid::-webkit-scrollbar-thumb {
             background: var(--secondary-color);
             border-radius: 10px;
         }
 
-        /* 人际关系网样式 */
         .relation-container {
             position: relative;
             width: 100%;
             height: 700px;
-            background: radial-gradient(circle at center, #fff 0%, #f9fafb 100%);
-            border-radius: 40px;
+            background:
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.96) 0%, rgba(247, 249, 252, 0.92) 52%, rgba(239, 242, 248, 0.98) 100%);
+            border-radius: 2.5rem;
             overflow: hidden;
-            border: 1px solid #eee;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 28px 60px rgba(46, 33, 56, 0.1);
         }
+
+        .relation-container::before,
+        .relation-container::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(8px);
+            pointer-events: none;
+        }
+
+        .relation-container::before {
+            inset: 2rem auto auto 2rem;
+            width: 16rem;
+            height: 16rem;
+            background: radial-gradient(circle, rgba(221, 204, 236, 0.32), transparent 70%);
+        }
+
+        .relation-container::after {
+            right: 2rem;
+            bottom: 2rem;
+            width: 14rem;
+            height: 14rem;
+            background: radial-gradient(circle, rgba(204, 227, 247, 0.26), transparent 70%);
+        }
+
         .relation-node {
             position: absolute;
             width: 100px;
             height: 100px;
             z-index: 10;
             transform: translate(-50%, -50%);
-            transition: all 0.3s ease;
+            transition: transform 0.25s ease, filter 0.25s ease;
         }
+
+        .relation-node:hover {
+            transform: translate(-50%, -50%) scale(1.06);
+            filter: saturate(1.04);
+        }
+
         .relation-avatar {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: 4px solid rgba(255, 255, 255, 0.94);
+            box-shadow: 0 18px 30px rgba(45, 33, 56, 0.16);
             object-fit: cover;
-            background: white;
+            background: rgba(255, 255, 255, 0.98);
         }
+
         .relation-label {
             position: absolute;
-            top: 110%;
+            top: 112%;
             left: 50%;
             transform: translateX(-50%);
             white-space: nowrap;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.82);
+            padding: 0.42rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
             color: #4a4453;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border: 1px solid #f0f0f0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.84);
+            backdrop-filter: blur(16px);
         }
-        .relation-line-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
+
+        .relation-line-layer,
         .relation-label-layer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 20;
             pointer-events: none;
         }
+
+        .relation-line-layer {
+            z-index: 1;
+        }
+
+        .relation-label-layer {
+            z-index: 20;
+        }
+
         .relation-tag {
-            font-size: 0.75rem;
-            fill: #776d82;
-            font-weight: bold;
+            font-size: 0.74rem;
+            fill: #6d6176;
+            font-weight: 700;
             paint-order: stroke;
-            stroke: #fff;
-            stroke-width: 4px;
+            stroke: rgba(255, 255, 255, 0.96);
+            stroke-width: 5px;
             stroke-linecap: round;
             stroke-linejoin: round;
+            letter-spacing: 0.04em;
         }
+
         .node-main {
-            width: 120px;
-            height: 120px;
+            width: 128px;
+            height: 128px;
         }
+
         .node-main .relation-avatar {
-            border-color: #d4e5f8;
-            box-shadow: 0 0 0 6px rgba(212, 229, 248, 0.3);
+            border-color: rgba(216, 230, 248, 0.96);
+            box-shadow: 0 0 0 8px rgba(212, 229, 248, 0.32), 0 18px 38px rgba(45, 33, 56, 0.18);
+        }
+
+        .secret-button {
+            background: linear-gradient(135deg, var(--theme-deep), #5c4f68);
+            box-shadow: 0 16px 32px rgba(45, 36, 55, 0.22);
+        }
+
+        .secret-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 38px rgba(45, 36, 55, 0.28);
+        }
+
+        .page-footer {
+            background:
+                linear-gradient(180deg, rgba(36, 27, 44, 0.98), rgba(27, 21, 32, 1)),
+                radial-gradient(circle at top, rgba(189, 214, 241, 0.12), transparent 35%);
+        }
+
+        @media (max-width: 900px) {
+            .music-player-fixed {
+                width: 290px;
+                right: 1rem;
+                bottom: 1rem;
+            }
+
+            .relation-container {
+                height: 620px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-shell::before {
+                inset: 1.25rem 0.5rem;
+                border-radius: 1.5rem;
+            }
+
+            .site-nav .container {
+                gap: 0.8rem;
+            }
+
+            .nav-brand {
+                font-size: 1.2rem;
+                letter-spacing: 0.2em;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+
+            .nav-link {
+                padding: 0.65rem 0.8rem;
+                font-size: 0.86rem;
+            }
+
+            .hero-panel {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .hero-bg-text {
+                font-size: clamp(4rem, 22vw, 7rem);
+            }
+
+            .music-player-fixed {
+                width: 260px;
+            }
+
+            .relation-container {
+                height: 560px;
+                border-radius: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .music-player-fixed {
+                right: 0.75rem;
+                bottom: 0.75rem;
+                width: calc(100vw - 1.5rem);
+                max-width: 320px;
+            }
+
+            .music-player-fixed.collapsed {
+                width: 60px;
+                height: 60px;
+            }
+
+            .section-subtitle {
+                font-size: 0.96rem;
+            }
+
+            .relation-container {
+                height: 500px;
+            }
         }
     </style>
 </head>
@@ -307,15 +777,15 @@
     </div>
 
     <!-- 导航栏 -->
-    <nav class="fixed top-0 w-full bg-white/10 backdrop-blur-md shadow-sm z-50 transition-all duration-300 hover:bg-white/90">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-white mix-blend-difference">MAYURI</div>
-            <div class="space-x-8">
-                <a href="#home" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">首页</a>
-                <a href="#profile" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">角色档案</a>
-                <a href="#relations" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">人际关系</a>
-                <a href="#visuals" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">CG展示</a>
-                <a href="#composite" class="nav-link text-white mix-blend-difference hover:text-[#d4e5f8] font-medium">场景立绘</a>
+    <nav class="site-nav fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 md:px-6 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="nav-brand">MAYURI</div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link font-medium">首页</a>
+                <a href="#profile" class="nav-link font-medium">角色档案</a>
+                <a href="#relations" class="nav-link font-medium">人际关系</a>
+                <a href="#visuals" class="nav-link font-medium">CG展示</a>
+                <a href="#composite" class="nav-link font-medium">场景立绘</a>
             </div>
         </div>
     </nav>
@@ -323,13 +793,21 @@
     <!-- 首页全屏视觉区 -->
     <section id="home" class="hero-section">
         <img src="资源/剧照/MEV001A.png" alt="白鹭茉百合 剧照" class="hero-image">
+        <div class="hero-overlay"></div>
         <div class="hero-bg-text">MAYURI</div>
         <div class="hero-content px-6">
-            <h2 class="text-[#d4e5f8] text-2xl font-semibold mb-4 italic tracking-widest">Mayuri Shiragiku</h2>
-            <h1 class="text-6xl md:text-8xl font-bold mb-8 tracking-tighter">白鹭 茉百合</h1>
-            <p class="text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-light opacity-90 leading-relaxed">
-                「 呐、茉百合。 你真的是、为了被爱而生下来的呀 」
-            </p>
+            <div class="hero-panel">
+                <h2 class="text-[#e5d7f4] text-xl md:text-2xl font-semibold mb-4 italic tracking-[0.45em] uppercase">Mayuri Shiragiku</h2>
+                <h1 class="font-display text-5xl md:text-8xl font-semibold mb-8 tracking-[0.18em]">白鹭 茉百合</h1>
+                <p class="text-lg md:text-2xl mb-0 max-w-2xl mx-auto font-light opacity-90 leading-relaxed">
+                    「 呐、茉百合。 你真的是、为了被爱而生下来的呀 」
+                </p>
+                <div class="hero-upvote" aria-label="首页顶一下计数器">
+                    <span class="hero-upvote-label">顶</span>
+                    <span id="hero-upvote-count" class="hero-upvote-count">0</span>
+                    <button id="hero-upvote-button" type="button" class="hero-upvote-button">顶一下</button>
+                </div>
+            </div>
         </div>
         <!-- 向下箭头 -->
         <a href="#profile" class="scroll-down">
@@ -340,13 +818,15 @@
     </section>
 
     <!-- 角色档案区 -->
-    <section id="profile" class="py-20 bg-white">
+    <section id="profile" class="section-shell py-24">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-gray-800 mb-12 text-center">角色档案 / Profile</h2>
+            <div class="text-center mb-14">
+                <h2 class="section-title">角色档案</h2>
+            </div>
             <div class="flex flex-col md:flex-row gap-12 items-start max-w-6xl mx-auto">
                 <!-- 左侧：立绘与核心数值 -->
                 <div class="md:w-1/3 sticky top-24">
-                    <div class="relative group">
+                    <div class="relative group glass-panel p-3 rounded-[2rem]">
                         <img src="资源/立绘/ST04S_A010.png" alt="Profile" class="rounded-2xl shadow-2xl border-2 border-[#d4e5f8] bg-gray-50 transition-transform duration-500 group-hover:scale-[1.02]">
                         <div class="absolute -bottom-4 -right-4 bg-[#776d82] text-white py-2 px-6 rounded-lg shadow-lg">
                             <p class="text-sm font-medium">CV: 凉森ちさと</p>
@@ -354,25 +834,25 @@
                     </div>
                     
                     <div class="mt-10 grid grid-cols-2 gap-4">
-                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                        <div class="soft-card p-4 rounded-xl text-center hover:shadow-md transition-shadow">
                             <p class="text-xs text-gray-400 uppercase mb-1">生日 / Birthday</p>
                             <p class="font-bold text-[#776d82]">7月13日</p>
                         </div>
-                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                        <div class="soft-card p-4 rounded-xl text-center hover:shadow-md transition-shadow">
                             <p class="text-xs text-gray-400 uppercase mb-1">血型 / Blood Type</p>
                             <p class="font-bold text-[#776d82]">B型</p>
                         </div>
-                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                        <div class="soft-card p-4 rounded-xl text-center hover:shadow-md transition-shadow">
                             <p class="text-xs text-gray-400 uppercase mb-1">身高 / Height</p>
                             <p class="font-bold text-[#776d82]">162cm</p>
                         </div>
-                        <div class="p-4 bg-[#f8f9fa] rounded-xl border border-gray-100 text-center hover:shadow-md transition-shadow">
+                        <div class="soft-card p-4 rounded-xl text-center hover:shadow-md transition-shadow">
                             <p class="text-xs text-gray-400 uppercase mb-1">体重 / Weight</p>
                             <p class="font-bold text-[#776d82]">50kg</p>
                         </div>
                     </div>
 
-                    <div class="mt-8 p-6 bg-gradient-to-br from-[#776d82] to-[#4a4453] rounded-2xl text-white shadow-lg">
+                    <div class="mt-8 p-6 bg-gradient-to-br from-[#776d82] via-[#65556f] to-[#322938] rounded-[1.75rem] text-white shadow-[0_22px_50px_rgba(44,33,55,0.22)]">
                         <p class="text-lg font-medium leading-relaxed italic">
                             “没办法了呢…你救了我的事，要对奏龙保密哟”
                         </p>
@@ -393,13 +873,13 @@
                                 私立凤缭兰学园的学生会副会长，晶的上级生。在学园内是与缭兰会的水无濑樱子平分秋色的学园偶像般的存在。
                             </p>
                             <p class="leading-relaxed">
-                                她与另一位副会长八重野萤共同处理了学生会的几乎所有繁杂事务，其出色的工作效率和待人接物的手段深受全校信赖。
+                                她与另一位副会长八重野萤，辅佐吉祥物会长皇奏龙，二人共同处理了学生会的几乎所有繁杂事务，其出色的工作效率和待人接物的手段深受全校信赖。
                             </p>
                         </div>
                     </div>
 
                     <!-- 性格与能力 -->
-                    <div class="bg-[#f8f9fa] p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+                    <div class="content-block p-8 rounded-3xl relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10">
                             <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
                         </div>
@@ -412,15 +892,15 @@
                                     性格文静而温柔，高贵而优雅。不仅容貌端庄，更拥有优秀的成绩与全能的运动神经。做任何事都毫无疏漏，极具领悟力。
                                 </p>
                                 <p class="leading-relaxed">
-                                    对于晶而言，她既是令人景仰的前辈，也是商量人际关系与学习问题的绝佳对象。
+                                    对于晶而言，她既是令人景仰的前辈，也是商量人际关系与学习问题的对象。在这样的交往中，二人迸发了爱情的火花。
                                 </p>
                             </div>
-                            <div class="bg-white/60 p-5 rounded-2xl border border-red-50">
+                            <div class="bg-white/70 p-5 rounded-2xl border border-red-50 shadow-[0_16px_30px_rgba(180,76,76,0.08)]">
                                 <p class="text-red-800 font-bold mb-2 flex items-center">
                                     <span class="w-2 h-2 bg-red-800 rounded-full mr-2"></span> 腹黑属性
                                 </p>
                                 <p class="text-gray-600 text-sm leading-relaxed italic">
-                                    在完美无瑕的女神外表下，其实隐藏着相当腹黑的一面。为了维持人际关系的圆滑，她早已习惯了彻底演绎“温驯小猫”的姿态。
+                                    在完美无瑕的女神外表下，其实隐藏着相当腹黑的一面。为了维持人际关系的圆滑，她早已习惯了彻底演绎“温驯小猫”的姿态。但其实另有难言之隐
                                 </p>
                             </div>
                         </div>
@@ -428,7 +908,7 @@
 
                     <!-- 人际关系 -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="p-6 bg-white border-2 border-[#d4e5f8] rounded-2xl shadow-sm">
+                        <div class="soft-card p-6 border-2 border-[#d4e5f8] rounded-2xl">
                             <h4 class="font-bold text-gray-800 mb-4 flex items-center">
                                 <span class="w-2 h-6 bg-[#d4e5f8] mr-3 rounded-full"></span> 社交纽带
                             </h4>
@@ -436,7 +916,7 @@
                                 与缭兰会的水无濑樱子关系如亲姐妹般要好，私下里经常协助处理缭兰会的各项事务，展现了极强的跨组织协调能力。
                             </p>
                         </div>
-                        <div class="p-6 bg-white border-2 border-[#d4e5f8] rounded-2xl shadow-sm">
+                        <div class="soft-card p-6 border-2 border-[#d4e5f8] rounded-2xl">
                             <h4 class="font-bold text-gray-800 mb-4 flex items-center">
                                 <span class="w-2 h-6 bg-[#d4e5f8] mr-3 rounded-full"></span> 关于婚约
                             </h4>
@@ -453,7 +933,7 @@
                             <div class="flex-grow h-px bg-gray-200"></div>
                         </div>
                         
-                        <div class="p-8 bg-gray-50 rounded-3xl space-y-6 border border-gray-100">
+                        <div class="content-block p-8 rounded-3xl space-y-6">
                             <div>
                                 <h5 class="font-bold text-[#776d82] mb-3 flex items-center">名门之后</h5>
                                 <p class="text-gray-600 leading-relaxed">
@@ -467,7 +947,7 @@
                                     四年前目睹了守护自己的刑警葛木茂树在眼前被枪杀。这位曾给予她如父般温暖的人的离去，成为了她内心最深的阴影。
                                 </p>
                                 <div class="bg-white/80 p-4 rounded-xl text-sm text-gray-500 italic">
-                                    直至今日，她仍会因突如其来的巨响而感到恐惧。她一直在尽力寻找那位刑警被捐赠的心脏的下落，仿佛那是她唯一的救赎。
+                                    直至今日，她仍会因突如其来的巨响而感到恐惧。
                                 </div>
                             </div>
                         </div>
@@ -478,12 +958,14 @@
     </section>
 
     <!-- 人际关系区 -->
-    <section id="relations" class="py-20 bg-[#f8f9fa]">
+    <section id="relations" class="section-shell py-24">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">人际关系</h2>
-            <p class="text-center text-gray-500 mb-12">茉百合与其身边人们的复杂纽带</p>
+            <div class="text-center mb-14">
+                <h2 class="section-title">人际关系</h2>
+                <p class="section-subtitle">茉百合与其身边人们的复杂纽带。FH与君影世界观有所差异</p>
+            </div>
             
-            <div class="max-w-6xl mx-auto relation-container shadow-inner" id="relation-canvas">
+            <div class="max-w-6xl mx-auto relation-container" id="relation-canvas">
                 <svg class="relation-line-layer" id="relation-lines"></svg>
                 <svg class="relation-label-layer" id="relation-labels"></svg>
                 
@@ -542,7 +1024,7 @@
 
             <!-- 沉痛的秘密 入口 -->
             <div class="mt-12 text-center">
-                <button onclick="showSecretWarning()" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-gray-800 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 hover:bg-gray-700">
+                <button onclick="showSecretWarning()" class="secret-button group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
                     <span class="mr-2">沉痛的秘密</span>
                     <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -583,9 +1065,11 @@
     </div>
 
     <!-- CG 展示区 -->
-    <section id="visuals" class="py-20 bg-gray-50">
+    <section id="visuals" class="section-shell py-24">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-gray-800 mb-12 text-center">CG展示</h2>
+            <div class="text-center mb-14">
+                <h2 class="section-title">CG展示</h2>
+            </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="gallery-grid">
                 <!-- CG 项将由 JS 动态生成 -->
@@ -605,27 +1089,29 @@
     </div>
 
     <!-- 场景立绘组合器 -->
-    <section id="composite" class="py-20 bg-white">
+    <section id="composite" class="section-shell py-24">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">场景立绘</h2>
-            <p class="text-center text-gray-500 mb-12">自由组合背景与角色立绘</p>
+            <div class="text-center mb-14">
+                <h2 class="section-title">场景立绘</h2>
+                <p class="section-subtitle">自由组合功能</p>
+            </div>
 
             <div class="max-w-5xl mx-auto">
                 <!-- 预览框 -->
-                <div id="comp-preview-box" class="composite-preview relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl border-4 border-[#d4e5f8] flex items-center justify-center bg-gray-100">
+                <div id="comp-preview-box" class="composite-preview relative w-full aspect-video rounded-[2rem] overflow-hidden shadow-[0_28px_60px_rgba(44,33,55,0.16)] border border-white/70 flex items-center justify-center bg-gray-100">
                     <div id="comp-placeholder" class="text-gray-400 text-xl font-medium z-10">请选择场景与立绘</div>
                     <img id="bg-layer" class="absolute inset-0 w-full h-full object-cover hidden" src="" alt="背景层">
                     <img id="standing-layer" class="absolute bottom-0 left-1/2 -translate-x-1/2 h-[90%] object-contain hidden pointer-events-none" src="" alt="立绘层">
                 </div>
 
                 <!-- 控制台 -->
-                <div class="mt-12 bg-[#f8f9fa] p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="flex space-x-2">
+                <div class="glass-panel mt-12 p-8 rounded-[2rem]">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div class="flex flex-wrap gap-2">
                             <button onclick="switchTab('bg')" id="tab-bg" class="px-6 py-2 rounded-xl bg-[#776d82] text-white font-medium transition-all shadow-md">背景选择</button>
                             <button onclick="switchTab('standing')" id="tab-standing" class="px-6 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-all">立绘选择</button>
                         </div>
-                        <button onclick="resetComposite()" class="text-sm text-red-400 hover:text-red-500 font-medium flex items-center">
+                        <button onclick="resetComposite()" class="text-sm text-red-400 hover:text-red-500 font-medium flex items-center self-start md:self-auto">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             重置
                         </button>
@@ -635,6 +1121,7 @@
                         <div id="bg-selector" class="selector-grid flex overflow-x-auto space-x-4 pb-4 custom-scrollbar">
                             <!-- 背景项将由 JS 生成 -->
                         </div>
+                        <input id="bg-upload-input" type="file" accept="image/*" class="hidden">
                         <div id="standing-selector" class="selector-grid hidden grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                             <!-- 立绘项将由 JS 生成 -->
                         </div>
@@ -643,8 +1130,12 @@
         </div>
     </section>
 
-    <footer class="py-12 bg-gray-900 text-white text-center">
-        <p class="text-gray-400">© 织工</p>
+    <footer class="page-footer py-14 text-white text-center">
+        <div class="mx-auto max-w-3xl px-6">
+            <p class="font-display text-2xl tracking-[0.28em] text-white/90 uppercase">Mayuri</p>
+            <p class="text-sm text-white/55 mt-3 tracking-[0.24em] uppercase">A character tribute page built from story fragments, memory and stillness.</p>
+            <p class="text-white/45 mt-6">© 织工</p>
+        </div>
     </footer>
 
     <script>
@@ -730,9 +1221,9 @@
             { path: "资源/剧照/MEV007A.png", title: "仓库里发生的事，是契机，还是危机？" },
             { path: "资源/剧照/MEV011C.png", title: "茉百合本以为葛木茂树已经逝去，却因为巧合拨通了他的电话" },
             { path: "资源/剧照/MEV035B.png", title: "小白鹭茉百合" },
-            { path: "资源/剧照/MEV044D.png", title: "历经磨难，晶与茉百合" },
-            { path: "资源/剧照/MEV045A.png", title: "历经磨难，晶与茉百合" },
-            { path: "资源/剧照/MEV051A.png", title: "晶受到了茉百合娘家的排斥，茉百合为他做饭" }
+            { path: "资源/剧照/MEV044D.png", title: "晶与茉百合在磨难之后" },
+            { path: "资源/剧照/MEV045A.png", title: "晶与茉百合在磨难之后" },
+            { path: "资源/剧照/MEV051A.png", title: "晶受到了茉百合本家的排斥，茉百合的帮助" }
         ];
 
         function initCG() {
@@ -800,17 +1291,41 @@
         const standingAssets = [
             "ST04H_A010.png", "ST04H_A020.png", "ST04H_A110.png", "ST04H_B010.png", "ST04H_B020.png", "ST04H_B030.png", "ST04H_B040.png", "ST04H_B060.png", "ST04H_B110.png", "ST04L_A010.png", "ST04L_A020.png", "ST04S_A010.png", "ST04S_A020.png", "ST04S_A060.png", "ST04S_B010.png", "ST04S_B020.png", "ST04S_B040.png", "ST04S_B060.png"
         ];
+        let uploadedBgObjectUrl = null;
 
         function initComposite() {
             const bgContainer = document.getElementById('bg-selector');
             const standingContainer = document.getElementById('standing-selector');
+            const uploadInput = document.getElementById('bg-upload-input');
             
             // 清空容器以防重复初始化
             bgContainer.innerHTML = '';
             standingContainer.innerHTML = '';
 
+            const uploadItem = document.createElement('label');
+            uploadItem.id = 'bg-upload-item';
+            uploadItem.setAttribute('for', 'bg-upload-input');
+            uploadItem.setAttribute('data-asset-option', 'true');
+            uploadItem.className = 'flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden cursor-pointer border-2 border-dashed border-[#c9bfd3] hover:border-[#776d82] transition-all relative group bg-white/70 shadow-sm';
+            uploadItem.innerHTML = `
+                <img id="bg-upload-preview" class="w-full h-full object-cover hidden" alt="上传背景预览">
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-white/90 to-[#eef4fb]/80 text-[#5f5069] text-center px-3">
+                    <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 16V4m0 0l-4 4m4-4l4 4M4 16.5V18a2 2 0 002 2h12a2 2 0 002-2v-1.5"></path>
+                    </svg>
+                    <div class="leading-tight">
+                        <p id="bg-upload-label" class="text-xs font-semibold tracking-[0.18em] uppercase">上传背景</p>
+                        <p id="bg-upload-hint" class="text-[11px] text-[#7e6a88]/80 mt-1">本地图片</p>
+                    </div>
+                </div>
+            `;
+            bgContainer.appendChild(uploadItem);
+
+            uploadInput.onchange = handleBackgroundUpload;
+
             bgAssets.forEach(file => {
                 const item = document.createElement('div');
+                item.setAttribute('data-asset-option', 'true');
                 item.className = 'flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#776d82] transition-all relative group';
                 item.innerHTML = `
                     <img src="资源/背景/${file}" class="w-full h-full object-cover" loading="lazy">
@@ -821,6 +1336,7 @@
             });
             standingAssets.forEach(file => {
                 const item = document.createElement('div');
+                item.setAttribute('data-asset-option', 'true');
                 item.className = 'w-full aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#776d82] transition-all bg-gray-200 relative group';
                 item.innerHTML = `
                     <img src="资源/立绘/${file}" class="w-full h-full object-contain" loading="lazy">
@@ -849,25 +1365,9 @@
             }
         }
 
-        function selectAsset(type, file, element) {
-            const layer = document.getElementById(type === 'bg' ? 'bg-layer' : 'standing-layer');
-            const placeholder = document.getElementById('comp-placeholder');
-            
-            // 设置图片并显示层
-            layer.src = `资源/${type === 'bg' ? '背景' : '立绘'}/${file}`;
+        function setCompositeLayer(layer, src) {
+            layer.src = src;
             layer.classList.remove('hidden');
-            
-            // 只有当两个图层都有图片时才完全隐藏占位符，或者根据用户需求直接隐藏
-            placeholder.classList.add('hidden');
-            
-            // 处理选中状态样式
-            const container = element.parentElement;
-            container.querySelectorAll('div').forEach(div => {
-                div.classList.remove('border-[#776d82]', 'scale-95', 'shadow-inner');
-            });
-            element.classList.add('border-[#776d82]', 'scale-95', 'shadow-inner');
-            
-            // 简单的入场动画效果
             layer.style.opacity = '0';
             layer.style.transition = 'opacity 0.5s ease-in-out';
             setTimeout(() => {
@@ -875,11 +1375,255 @@
             }, 50);
         }
 
+        function clearAssetSelection(container) {
+            container.querySelectorAll('[data-asset-option="true"]').forEach(item => {
+                item.classList.remove('border-[#776d82]', 'scale-95', 'shadow-inner');
+            });
+        }
+
+        function selectBackgroundSource(src, element) {
+            const layer = document.getElementById('bg-layer');
+            const placeholder = document.getElementById('comp-placeholder');
+
+            setCompositeLayer(layer, src);
+            placeholder.classList.add('hidden');
+
+            if (element) {
+                clearAssetSelection(element.parentElement);
+                element.classList.add('border-[#776d82]', 'scale-95', 'shadow-inner');
+            }
+        }
+
+        function handleBackgroundUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            if (uploadedBgObjectUrl) {
+                URL.revokeObjectURL(uploadedBgObjectUrl);
+            }
+
+            uploadedBgObjectUrl = URL.createObjectURL(file);
+
+            const uploadItem = document.getElementById('bg-upload-item');
+            const uploadPreview = document.getElementById('bg-upload-preview');
+            const uploadLabel = document.getElementById('bg-upload-label');
+            const uploadHint = document.getElementById('bg-upload-hint');
+
+            uploadPreview.src = uploadedBgObjectUrl;
+            uploadPreview.classList.remove('hidden');
+            uploadLabel.textContent = '已上传背景';
+            uploadHint.textContent = file.name;
+
+            selectBackgroundSource(uploadedBgObjectUrl, uploadItem);
+        }
+
+        function selectAsset(type, file, element) {
+            const layer = document.getElementById(type === 'bg' ? 'bg-layer' : 'standing-layer');
+            const placeholder = document.getElementById('comp-placeholder');
+
+            if (type === 'bg') {
+                selectBackgroundSource(`资源/背景/${file}`, element);
+                return;
+            }
+
+            setCompositeLayer(layer, `资源/立绘/${file}`);
+            placeholder.classList.add('hidden');
+
+            clearAssetSelection(element.parentElement);
+            element.classList.add('border-[#776d82]', 'scale-95', 'shadow-inner');
+        }
+
         function resetComposite() {
-            document.getElementById('bg-layer').classList.add('hidden');
-            document.getElementById('standing-layer').classList.add('hidden');
+            const bgLayer = document.getElementById('bg-layer');
+            const standingLayer = document.getElementById('standing-layer');
+            const uploadInput = document.getElementById('bg-upload-input');
+            const uploadPreview = document.getElementById('bg-upload-preview');
+            const uploadLabel = document.getElementById('bg-upload-label');
+            const uploadHint = document.getElementById('bg-upload-hint');
+
+            bgLayer.classList.add('hidden');
+            bgLayer.removeAttribute('src');
+            standingLayer.classList.add('hidden');
+            standingLayer.removeAttribute('src');
             document.getElementById('comp-placeholder').classList.remove('hidden');
-            document.querySelectorAll('.selector-grid div').forEach(div => div.classList.remove('border-[#776d82]', 'scale-95'));
+            document.querySelectorAll('.selector-grid [data-asset-option="true"]').forEach(item => item.classList.remove('border-[#776d82]', 'scale-95', 'shadow-inner'));
+
+            if (uploadedBgObjectUrl) {
+                URL.revokeObjectURL(uploadedBgObjectUrl);
+                uploadedBgObjectUrl = null;
+            }
+
+            if (uploadInput) {
+                uploadInput.value = '';
+            }
+
+            if (uploadPreview) {
+                uploadPreview.classList.add('hidden');
+                uploadPreview.removeAttribute('src');
+            }
+
+            if (uploadLabel) {
+                uploadLabel.textContent = '上传背景';
+            }
+
+            if (uploadHint) {
+                uploadHint.textContent = '本地图片';
+            }
+        }
+
+        const HERO_UPVOTE_STORAGE_KEY = 'mayuri-home-upvote-count';
+        const WELCOME_VOICE_PATH = '资源/语音/欢迎语.wav';
+        const THANK_YOU_VOICE_PATHS = [
+            '资源/语音/感谢 (1).wav',
+            '资源/语音/感谢 (2).wav',
+            '资源/语音/感谢 (3).wav',
+            '资源/语音/感谢 (4).wav',
+            '资源/语音/感谢 (5).wav'
+        ];
+        const voicePlayer = new Audio();
+        const voiceQueue = [];
+        let isVoicePlaying = false;
+        let isVoiceAwaitingInteraction = false;
+        let hasQueuedWelcomeVoice = false;
+        let welcomeVoiceTimerId = null;
+        let lastThankYouVoicePath = null;
+
+        voicePlayer.preload = 'auto';
+
+        function readHeroUpvoteCount() {
+            try {
+                const storedValue = localStorage.getItem(HERO_UPVOTE_STORAGE_KEY);
+                const parsedValue = Number.parseInt(storedValue || '0', 10);
+                return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : 0;
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        function writeHeroUpvoteCount(value) {
+            try {
+                localStorage.setItem(HERO_UPVOTE_STORAGE_KEY, String(value));
+            } catch (error) {
+                // 忽略本地存储不可用的情况
+            }
+        }
+
+        function updateHeroUpvoteDisplay(value) {
+            const countLabel = document.getElementById('hero-upvote-count');
+            if (countLabel) {
+                countLabel.textContent = String(value);
+            }
+        }
+
+        function enqueueVoice(path, options = {}) {
+            if (!path) return;
+
+            if (options.priority) {
+                voiceQueue.unshift(path);
+            } else {
+                voiceQueue.push(path);
+            }
+
+            playNextVoiceInQueue();
+        }
+
+        function playNextVoiceInQueue() {
+            if (isVoicePlaying || isVoiceAwaitingInteraction || voiceQueue.length === 0) return;
+
+            const nextVoicePath = voiceQueue.shift();
+            isVoicePlaying = true;
+            voicePlayer.src = nextVoicePath;
+            voicePlayer.currentTime = 0;
+
+            voicePlayer.play().catch(() => {
+                isVoicePlaying = false;
+                isVoiceAwaitingInteraction = true;
+                voiceQueue.unshift(nextVoicePath);
+            });
+        }
+
+        function handleVoicePlaybackFinished() {
+            isVoicePlaying = false;
+            playNextVoiceInQueue();
+        }
+
+        function ensureWelcomeVoiceQueued() {
+            if (hasQueuedWelcomeVoice) return;
+
+            hasQueuedWelcomeVoice = true;
+            enqueueVoice(WELCOME_VOICE_PATH, { priority: true });
+        }
+
+        function tryTriggerWelcomeVoice() {
+            ensureWelcomeVoiceQueued();
+            playNextVoiceInQueue();
+        }
+
+        function resumeVoiceQueueFromInteraction() {
+            if (welcomeVoiceTimerId) {
+                clearTimeout(welcomeVoiceTimerId);
+                welcomeVoiceTimerId = null;
+            }
+
+            ensureWelcomeVoiceQueued();
+
+            if (isVoiceAwaitingInteraction) {
+                isVoiceAwaitingInteraction = false;
+            }
+
+            playNextVoiceInQueue();
+        }
+
+        function getRandomThankYouVoicePath() {
+            if (THANK_YOU_VOICE_PATHS.length <= 1) {
+                return THANK_YOU_VOICE_PATHS[0];
+            }
+
+            const selectableVoices = THANK_YOU_VOICE_PATHS.filter(path => path !== lastThankYouVoicePath);
+            const voicePool = selectableVoices.length > 0 ? selectableVoices : THANK_YOU_VOICE_PATHS;
+            const randomIndex = Math.floor(Math.random() * voicePool.length);
+            return voicePool[randomIndex];
+        }
+
+        function canAcceptHeroUpvoteVoice() {
+            return !isVoicePlaying && !isVoiceAwaitingInteraction && voiceQueue.length === 0;
+        }
+
+        function triggerHeroUpvoteVoice() {
+            const selectedVoicePath = getRandomThankYouVoicePath();
+            lastThankYouVoicePath = selectedVoicePath;
+            enqueueVoice(selectedVoicePath);
+        }
+
+        function incrementHeroUpvote() {
+            if (!canAcceptHeroUpvoteVoice()) return;
+
+            const nextValue = readHeroUpvoteCount() + 1;
+            writeHeroUpvoteCount(nextValue);
+            updateHeroUpvoteDisplay(nextValue);
+            triggerHeroUpvoteVoice();
+        }
+
+        function initHeroUpvote() {
+            const upvoteButton = document.getElementById('hero-upvote-button');
+            if (!upvoteButton) return;
+
+            updateHeroUpvoteDisplay(readHeroUpvoteCount());
+            upvoteButton.addEventListener('click', incrementHeroUpvote);
+        }
+
+        function initVoicePlayback() {
+            voicePlayer.addEventListener('ended', handleVoicePlaybackFinished);
+            voicePlayer.addEventListener('error', handleVoicePlaybackFinished);
+
+            ['pointerdown', 'keydown', 'touchstart'].forEach(eventName => {
+                window.addEventListener(eventName, resumeVoiceQueueFromInteraction, { once: true });
+            });
+
+            welcomeVoiceTimerId = window.setTimeout(() => {
+                welcomeVoiceTimerId = null;
+                tryTriggerWelcomeVoice();
+            }, 1000);
         }
 
         // 人际关系网绘制逻辑
@@ -959,6 +1703,8 @@
             initComposite();
             initCG();
             renderPlaylist();
+            initHeroUpvote();
+            initVoicePlayback();
             drawRelations();
         });
 
